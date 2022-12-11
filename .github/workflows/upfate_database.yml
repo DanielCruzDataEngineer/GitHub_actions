@@ -1,0 +1,4 @@
+name: Update S&P500 Symbol Liston:
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
