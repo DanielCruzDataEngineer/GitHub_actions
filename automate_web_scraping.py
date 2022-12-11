@@ -65,8 +65,8 @@ def func():
             print('\n\n')
             print(df_produtos)
     df_produtos.to_excel("cryptos.xlsx")
-    MONGODB_CONNECTION_STRING = os.environ['mongodb+srv://rodridc:220412@cluster0.klgekbo.mongodb.net/?retryWrites=true&w=majority']
-    client = MongoClient(MONGODB_CONNECTION_STRING)
+    # MONGODB_CONNECTION_STRING = os.environ['MONGODB_CONNECTION_STRING']
+    client = MongoClient("mongodb+srv://rodridc:220412@cluster0.klgekbo.mongodb.net/?retryWrites=true&w=majority")
     client.server_info()['ok']
 
     symbol_dict = df_produtos.to_dict('records')
