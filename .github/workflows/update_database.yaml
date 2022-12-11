@@ -33,4 +33,4 @@ jobs:
           git config --local user.name "GitHub Actions"
           git add cryptos.xlsx
           git commit -m "Updated symbol list on `date` with GitHub Actions" || echo "No Changes to Commit"
-          git push origin master || echo "No Changes to Commit"
+          git push || echo "No Changes to Commit"
