@@ -11,7 +11,7 @@ import time
 from pymongo import MongoClient
 import asyncio
 import os
-def func():
+def func(gcp,gcp_only):
 
     url_base = f'https://coinranking.com/coins/exchange'
 
@@ -43,7 +43,7 @@ def func():
             day = str(now.day) + '-'+ str(now.month) + '-' + str(now.year) 
             hour = str(now.hour)
             
-            percent = produto.find('div', attrs={'class': re.compile('change change--light|| change--\w+')}).get_text()
+            percent = produto.find('div', attrs={'class': re.compile('change change--light\s*\w*\-*\-*\w*')}).get_text()
             percent = re.sub(re.compile("[\s+\n]"),"",percent)
             print(percent)
             percent_df.append(percent)
@@ -63,7 +63,7 @@ def func():
                                         'Coin','Link', 'Price', 'Volume(1h)','Data','Hora'])
 
             print('\n\n')
-            print(df_produtos)
+            # print(df_produtos)
     df_produtos.to_excel("cryptos.xlsx")
     # MONGODB_CONNECTION_STRING = os.environ['MONGODB_CONNECTION_STRING']
     client = MongoClient("mongodb+srv://rodridc:220412@cluster0.klgekbo.mongodb.net/?retryWrites=true&w=majority")
@@ -78,7 +78,7 @@ def func():
 
 if __name__ == '__main__':
    
-    func()
-    time.sleep(5)
+    func("gcp","gcp_only")
+
 
 
