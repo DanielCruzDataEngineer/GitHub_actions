@@ -9,7 +9,7 @@ import time
 from pymongo import MongoClient
 import asyncio
 import os
-
+from lxml import etree
 def func():
 
     url_base = f'https://coinranking.com/'
@@ -19,49 +19,50 @@ def func():
     response = requests.get(url_base)
 
     site = BeautifulSoup(response.text, 'html.parser')
-
-    produtos = site.findAll('tr', attrs={'class': 'table__row table__row--click table__row--full-width'})
+    dom = etree.HTML(str(site))
     titulo_df = []
-    real_df = []
+    price_df = []
     link_df  = []
-    local_df = []
     percent_df = []
-    hour_df = []
-    day_df = []
-    month_df = []
-    if (produtos):
-        for produto in produtos:
-            
-            titulo = produto.find('a', attrs={'class': 'profile__link'}).text
-            titulo = re.sub(re.compile("[\n^\s+]"),"",titulo)
-            link = produto.find('a', attrs={'class': 'profile__link'})
-            real = produto.find('div', attrs={'class': 'valuta valuta--light'}).text
-            real = re.sub(re.compile("[\s+\$]"),"",real)
-            now = datetime.datetime.now()
+    for i in dom.xpath("//tr[@class=\"table__row table__row--click table__row--full-width\"]"):
+        titulo = i.xpath(
+            './/a[@class="profile__link"]/text()'
+        )[0]
 
-            day = str(now.day) + '-'+ str(now.month) + '-' + str(now.year) 
-            hour = str(now.hour)
-            
-            percent = produto.find('div', attrs={'class': re.compile('change change--light\s*\w*\-*\-*\w*')}).get_text()
-            percent = re.sub(re.compile("[\s+\n]"),"",percent)
-            print(percent)
-            percent_df.append(percent)
-            hour_df.append(hour)
-            day_df.append(day)
-            titulo_df.append( titulo)
-            link_df.append("https://coinranking.com"+ link['href'])
-            real_df.append(real) 
+        titulo = str(titulo).replace('\n','')
+        price = i.xpath(
+            './/div[@class="valuta valuta--light"]/text()'
+        )[0]
 
-            print('Título da Crypto:', titulo)
-            print('Link da crypto:', "https://coinranking.com"+link['href'])
-            print("Preço da Crypto :",real)
+        price = str(price).replace(',','.')
+
+        volume = i.xpath(
+            'td[4]//div/text()'
+        )[0]
+        volume = str(volume).replace('\n','')
+        link = i.xpath(
+            './/a[@class="profile__link"]/@href'
+        )[0]
+        link = 'https://coinranking.com' + str(link).replace('\n','')
 
 
-            df_produtos = pd.DataFrame(list(zip( titulo_df,link_df, real_df,percent_df, day_df,hour_df)), columns=[
+        #Etapa de tratamento de dados em massa
+        titulo = re.sub(re.compile("[\s*]"),"",titulo)
+        price = re.sub(re.compile("[\s*\$]"),"",price)
+        print(titulo)
 
-                                        'Coin','Link', 'Price', 'Volume(1h)','Data','Hora'])
+        percent_df.append(volume)
+        titulo_df.append( titulo)
+        link_df.append(link)
+        price_df.append(price)
 
-            print('\n\n')
+    df_produtos = pd.DataFrame(list(zip( titulo_df,link_df, price_df,percent_df, )), columns=[
+
+                                        'Coin','Link', 'Price', 'Volume(1h)'])
+    print(df_produtos)
+
+
+    # print('\n\n')
             # print(df_produtos)
     # df_produtos.to_excel("cryptos.xlsx")
     # # MONGODB_CONNECTION_STRING = os.environ['MONGODB_CONNECTION_STRING']

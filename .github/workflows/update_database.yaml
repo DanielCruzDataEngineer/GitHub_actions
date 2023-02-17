@@ -26,7 +26,7 @@ jobs:
         env:
           MONGODB_CONNECTION_STRING: ${{ secrets.MONGODB_CONNECTION_STRING }}
         run: |
-          python automate_web_scraping.py
+          python Actions_Data/cryptos_webscrapping/cryptos_webscrapping
       - name: Commit and Push Changes
         run: |
           git config --local user.email "actions@github.com"
