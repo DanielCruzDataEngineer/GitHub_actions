@@ -49,22 +49,21 @@ def func():
         #Etapa de tratamento de dados em massa
         titulo = re.sub(re.compile("[\s*]"),"",titulo)
         price = re.sub(re.compile("[\s*\$]"),"",price)
-        print(titulo)
 
         percent_df.append(volume)
         titulo_df.append( titulo)
         link_df.append(link)
         price_df.append(price)
 
-    df_produtos = pd.DataFrame(list(zip( titulo_df,link_df, price_df,percent_df, )), columns=[
+    df_cryptos = pd.DataFrame(list(zip( titulo_df,link_df, price_df,percent_df, )), columns=[
 
                                         'Coin','Link', 'Price', 'Volume(1h)'])
-    print(df_produtos)
+    print(df_cryptos)
 
 
     # print('\n\n')
             # print(df_produtos)
-    # df_produtos.to_excel("cryptos.xlsx")
+    df_cryptos.to_excel("cryptos.xlsx")
     # # MONGODB_CONNECTION_STRING = os.environ['MONGODB_CONNECTION_STRING']
     # client = MongoClient("mongodb+srv://rodridc:220412@cluster0.klgekbo.mongodb.net/?retryWrites=true&w=majority")
     # client.server_info()['ok']
