@@ -1,4 +1,4 @@
-name: Update S&P500 Symbol List
+name: Update Cryptos List
 
 on:
   schedule:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   update_symbol_list:
-    name: Update S&P500 symbol list periodically
+    name: Update Cryptos symbol list periodically
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -32,5 +32,5 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add cryptos.xlsx
-          git commit -m "Updated symbol list on `date` with GitHub Actions" || echo "No Changes to Commit"
+          git commit -m "Updated cryptos list on `date` with GitHub Actions" || echo "No Changes to Commit"
           git push || echo "No Changes to Commit"
